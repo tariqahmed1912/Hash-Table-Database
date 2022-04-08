@@ -1,63 +1,66 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <string.h>
 
 #define SIZE 10
 
 typedef struct Node {
     struct Node *prev;
-    int value;
+    int uid; 
+    int salary;
     struct Node *next;
 } node;
 
 // 'hashtable' is an array of pointers.
 node* hashtable[SIZE];
 
-bool insertElement(int elem);
-bool searchElement(int elem);
-bool deleteElement(int elem);
+node* insertElement();
+void searchElement();
+void deleteElement();
 void displayHashTable();
-int hash(int elem);
+int hash(int uid);
 
 int main () {
-    int option, elem, flag = 0;
+    int elem, flag = 0;
+    char option;
 
     for (int i=0; i < SIZE; i++){
         hashtable[i] = NULL;
     }
 
-    printf("Welcome! Get started with hashing!\n");
+    printf("\t\tUser Management System\n");
+    printf("\t\t-----------------------\n");
     
     do {
-        printf("Menu:\n1. Insert\n2. Search\n3. Delete\n4. Display\n\n");
-        scanf("%d", &option);
+        printf("Options:\n1. (I)nsert a record\n2. (S)earch for a record\n3. (D)elete a record\n4. (V)iew all records\n5. Quit\n\n");
+        printf("Enter option: ");
+        scanf("%c", &option);
 
-        printf("Enter element: ");
-        scanf("%d", &elem);
-
-        bool res=false;
         switch (option)
         {
-        case 1: 
-            res = insertElement(elem); break;
-        case 2: 
-            res = searchElement(elem); break;
-        case 3: 
-            res = deleteElement(elem); break;
-        case 4: 
+        case 'I': 
+            //node* = insertElement(); 
+            int x = 10;
+            int y = 20;
+            int z = x+y;
+            printf("%d", z);
+            // printf("Record successfully added.");
+            // printf("UserID\tSalary");
+            // printf("%d\t%d", new->uid, new->salary);
+            break;
+        case 'S': 
+            searchElement(); break;
+        case 'D': 
+            deleteElement(); break;
+        case 'V': 
             displayHashTable(); break;
-        case 5: 
+        case 'Q': 
             printf("Quitting..\n");
             flag = 1;
             break;
         default:
             printf("Please enter valid option.\n"); break;
-        }
-
-        if (res == true) {
-            printf("Successful!\n");
-        } else{
-            printf("Not successful..\n");
         }
     } while (flag != 1);
     
@@ -65,17 +68,25 @@ int main () {
 }
 
 // hash function
-int hash(int elem) {
-    int key = elem % SIZE;
+int hash(int uid) {
+    int key = uid % SIZE;
     return key;
 }
 
 // function to insert a record
-bool insertElement(int elem) {
-    int key = hash(elem);
+node* insertElement() {
+    int uid, salary;
+    //char name[30];
+
+    printf("Enter UserID: "); scanf("%d", &uid);
+    //printf("Enter Name: "); scanf("%[^\n]s", name);
+    printf("Enter Salary: "); scanf("%d", &salary);
+    int key = hash(uid);
 
     node* newNode = malloc(sizeof(node));
-    newNode->value = elem;
+    newNode->uid = uid;
+    //strcpy(newNode->name, name);
+    newNode->salary = salary;
     newNode->next = NULL;
 
     node* current = hashtable[key];
@@ -89,19 +100,24 @@ bool insertElement(int elem) {
         current->next = newNode;
         newNode->prev = current;
     }
-    return true;        
+    
+    return newNode;      
 }
 
 // function to search for a particular record
-bool searchElement(int elem) {
-    int key = hash(elem);
+void searchElement() {
+    int uid;
+    printf("Enter UserID: ");
+    scanf("%d", &uid);
+    
+    int key = hash(uid);
     node* current = hashtable[key];
     if (current == NULL) {
         return false;
     }
 
     while (current != NULL) {
-        if (current->value == elem) {
+        if (current->uid == uid) {
             return true;
         }
         current = current->next;
@@ -110,8 +126,12 @@ bool searchElement(int elem) {
 }
 
 // function to delete a record
-bool deleteElement(int elem) {
-    int key = hash(elem);
+void deleteElement() {
+    int uid;
+    printf("Enter UserID: ");
+    scanf("%d", &uid);
+    
+    int key = hash(uid);
     node* current = hashtable[key];
     node* prev = NULL;
     if (current == NULL) {
@@ -119,7 +139,7 @@ bool deleteElement(int elem) {
         return false;
     }
     
-    while (current != NULL && current->value != elem) {
+    while (current != NULL && current->uid != uid) {
         prev = current;
         current = current->next;
     }
