@@ -15,10 +15,11 @@ typedef struct Node {
 // 'hashtable' is an array of pointers.
 node* hashtable[SIZE];
 
-node* insertElement();
-void searchElement();
-void deleteElement();
-void displayHashTable();
+void insertRecord();
+void searchRecord();
+void deleteRecord();
+void viewAll();
+void viewHashTable();
 int hash(int uid);
 
 int main () {
@@ -33,28 +34,22 @@ int main () {
     printf("\t\t-----------------------\n");
     
     do {
-        printf("Options:\n1. (I)nsert a record\n2. (S)earch for a record\n3. (D)elete a record\n4. (V)iew all records\n5. Quit\n\n");
+        printf("\nOptions:\n1. (I)nsert a record\n2. (S)earch for a record\n3. (D)elete a record\n4. (V)iew all records\n5. View (H)ash Table\n6. Quit\n\n");
         printf("Enter option: ");
-        scanf("%c", &option);
+        scanf(" %c", &option);
 
         switch (option)
         {
         case 'I': 
-            //node* = insertElement(); 
-            int x = 10;
-            int y = 20;
-            int z = x+y;
-            printf("%d", z);
-            // printf("Record successfully added.");
-            // printf("UserID\tSalary");
-            // printf("%d\t%d", new->uid, new->salary);
-            break;
+            insertRecord(); break;
         case 'S': 
-            searchElement(); break;
+            searchRecord(); break;
         case 'D': 
-            deleteElement(); break;
+            deleteRecord(); break;
         case 'V': 
-            displayHashTable(); break;
+            viewAll(); break;
+        case 'H':
+            viewHashTable(); break;
         case 'Q': 
             printf("Quitting..\n");
             flag = 1;
@@ -74,7 +69,7 @@ int hash(int uid) {
 }
 
 // function to insert a record
-node* insertElement() {
+void insertRecord() {
     int uid, salary;
     //char name[30];
 
@@ -101,62 +96,71 @@ node* insertElement() {
         newNode->prev = current;
     }
     
-    return newNode;      
+    printf("Record inserted successfully!\n");    
 }
 
 // function to search for a particular record
-void searchElement() {
-    int uid;
+void searchRecord() {
+    int uid, flag = 0;
     printf("Enter UserID: ");
     scanf("%d", &uid);
     
     int key = hash(uid);
     node* current = hashtable[key];
-    if (current == NULL) {
-        return false;
-    }
-
+    // if (current != NULL) {
+    //     printf("Record not found.");
+    // } else {
     while (current != NULL) {
         if (current->uid == uid) {
-            return true;
+            flag = 1;
+            break;
         }
         current = current->next;
     }
-    return false;
+    
+
+    if (flag == 0) {
+        printf("Record not found.\n");
+    } else {
+        printf("Record found.\n");
+        printf("UserID\tName\n");
+        printf("------\t----\n");
+        printf("%d\t%d\n", current->uid, current->salary);
+    }
 }
 
 // function to delete a record
-void deleteElement() {
-    int uid;
+void deleteRecord() {
+    int uid, flag = 0;
     printf("Enter UserID: ");
     scanf("%d", &uid);
     
     int key = hash(uid);
     node* current = hashtable[key];
     node* prev = NULL;
-    if (current == NULL) {
-        printf("Element does not exist. ");
-        return false;
-    }
-    
-    while (current != NULL && current->uid != uid) {
-        prev = current;
-        current = current->next;
+    if (current != NULL) {
+        while (current != NULL && current->uid != uid) {
+            prev = current;
+            current = current->next;
+        }
+
+        if (current != NULL) {
+            flag = 1;
+            prev->next = current->next;
+            current->next->prev = current->prev;
+        }
     }
 
-    if (current == NULL) {
-        printf("Element not found.");
-        return false;
+    if (flag == 0) {
+        printf("Record not found.\n");
+    } else {
+        printf("Record deleted successfully.\n");
     }
-
-    prev->next = current->next;
-    current->next->prev = current->prev;
     
-    return false;
 }
 
-// function to display database (all records) 
-void displayHashTable() {
+// function to display hashtable 
+void viewHashTable() {
     printf("Index\tValue\n");
     printf("-----\t-----\n");
     for (int i=0; i < SIZE; i++) {
@@ -165,13 +169,27 @@ void displayHashTable() {
             node* current = hashtable[i];
             
             while (current->next != NULL) {
-                printf("%d (%d)--->", current->value, current);
+                printf("%d---> ", current->uid);
                 current = current->next; 
             }
-            printf("%d (%d)\n", current->value, current);
+            printf("%d \n", current->uid);
         }
         else {
             printf("%d\n", hashtable[i]);
         }
+    }
+}
+
+// function to display database (all records) 
+void viewAll() {
+    printf("S.No.\tUserID\tSalary\n");
+    printf("------\t------\n");
+    int j=0;
+    for (int i=0; i < SIZE; i++) {
+        if (hashtable[i] == NULL) continue;
+        node* tmp = hashtable[i];
+        do { 
+            printf("%d\t%d\n", ++j, tmp->uid, tmp->salary);
+        } while (tmp->next != NULL);
     }
 }
