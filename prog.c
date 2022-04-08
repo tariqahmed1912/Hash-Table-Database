@@ -34,7 +34,7 @@ int main () {
     printf("\t\t-----------------------\n");
     
     do {
-        printf("\nOptions:\n1. (I)nsert a record\n2. (S)earch for a record\n 3. (D)elete a record\n4. (V)iew all records\n5. View (H)ash Table\n6. Quit\n\n");
+        printf("\nOptions:\n1. (I)nsert a record\n2. (S)earch for a record\n3. (D)elete a record\n4. (V)iew all records\n5. View (H)ash Table\n6. Quit\n\n");
         printf("Enter option: ");
         scanf(" %c", &option);
 
@@ -62,11 +62,13 @@ int main () {
     return 0;
 }
 
+
 // hash function
 int hash(int uid) {
     int key = uid % SIZE;
     return key;
 }
+
 
 // function to insert a record
 void insertRecord() {
@@ -99,6 +101,7 @@ void insertRecord() {
     printf("Record inserted successfully!\n");    
 }
 
+
 // function to search for a particular record
 void searchRecord() {
     int uid, flag = 0;
@@ -107,9 +110,7 @@ void searchRecord() {
     
     int key = hash(uid);
     node* current = hashtable[key];
-    // if (current != NULL) {
-    //     printf("Record not found.");
-    // } else {
+    
     while (current != NULL) {
         if (current->uid == uid) {
             flag = 1;
@@ -118,7 +119,6 @@ void searchRecord() {
         current = current->next;
     }
     
-
     if (flag == 0) {
         printf("Record not found.\n");
     } else {
@@ -146,9 +146,15 @@ void deleteRecord() {
         }
 
         if (current != NULL) {
+            printf("#################");
+            printf("I'm in!");
             flag = 1;
             prev->next = current->next;
-            current->next->prev = current->prev;
+            if (current->next != NULL) {
+                printf("Here too!");
+                current->next->prev = current->prev;
+            } 
+            free(current);
         }
     }
 
