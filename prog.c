@@ -34,7 +34,7 @@ int main () {
     printf("\t\t-----------------------\n");
     
     do {
-        printf("\nOptions:\n1. (I)nsert a record\n2. (S)earch for a record\n3. (D)elete a record\n4. (V)iew all records\n5. View (H)ash Table\n6. Quit\n\n");
+        printf("\nOptions:\n1. (I)nsert a record\n2. (S)earch for a record\n 3. (D)elete a record\n4. (V)iew all records\n5. View (H)ash Table\n6. Quit\n\n");
         printf("Enter option: ");
         scanf(" %c", &option);
 
@@ -129,6 +129,7 @@ void searchRecord() {
     }
 }
 
+
 // function to delete a record
 void deleteRecord() {
     int uid, flag = 0;
@@ -137,7 +138,7 @@ void deleteRecord() {
     
     int key = hash(uid);
     node* current = hashtable[key];
-    node* prev = NULL;
+    node* prev = current;
     if (current != NULL) {
         while (current != NULL && current->uid != uid) {
             prev = current;
@@ -161,7 +162,7 @@ void deleteRecord() {
 
 // function to display hashtable 
 void viewHashTable() {
-    printf("Index\tValue\n");
+    printf("\nIndex\tValue\n");
     printf("-----\t-----\n");
     for (int i=0; i < SIZE; i++) {
         printf("%d\t", i);
@@ -180,16 +181,20 @@ void viewHashTable() {
     }
 }
 
+
 // function to display database (all records) 
 void viewAll() {
     printf("S.No.\tUserID\tSalary\n");
-    printf("------\t------\n");
+    printf("-----\t------\t------\n");
     int j=0;
     for (int i=0; i < SIZE; i++) {
         if (hashtable[i] == NULL) continue;
         node* tmp = hashtable[i];
+
         do { 
-            printf("%d\t%d\n", ++j, tmp->uid, tmp->salary);
-        } while (tmp->next != NULL);
+            ++j;
+            printf("%d\t%d\t%d\n", j, tmp->uid, tmp->salary);
+            tmp = tmp->next;
+        } while (tmp != NULL);
     }
 }
