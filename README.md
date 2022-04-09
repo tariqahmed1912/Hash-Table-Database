@@ -11,7 +11,7 @@ Implemented a doubly linked list based hash table as a relational database using
 
 ## Output
 
-Insert records (Note: the database stores user ID and salary.)
+Insert records (Note: the database stores user ID and salary)
 
 ![](img/insert.gif)
 
