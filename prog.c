@@ -138,23 +138,33 @@ void deleteRecord() {
     
     int key = hash(uid);
     node* current = hashtable[key];
-    node* prev = current;
+    node* prev = NULL;
     if (current != NULL) {
         while (current != NULL && current->uid != uid) {
             prev = current;
             current = current->next;
         }
 
-        if (current != NULL) {
-            printf("#################");
-            printf("I'm in!");
+        // prev = NULL indicates that the first item in the list is being deleted.
+        // If there is only one element in the list, make current a Null pointer. 
+        if (prev == NULL) {
+            hashtable[key] = current->next;
+            if (current->next != NULL) {
+                current->next->prev = hashtable[key];
+            }
+            free(current);
+            current = NULL;
             flag = 1;
+        } 
+
+        // Enter this condition only if True when record matches.
+        if (current != NULL) {
             prev->next = current->next;
             if (current->next != NULL) {
-                printf("Here too!");
                 current->next->prev = current->prev;
             } 
             free(current);
+            flag = 1;
         }
     }
 
@@ -182,7 +192,7 @@ void viewHashTable() {
             printf("%d \n", current->uid);
         }
         else {
-            printf("%d\n", hashtable[i]);
+            printf("-\n");
         }
     }
 }
