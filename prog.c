@@ -34,6 +34,7 @@ int main () {
     printf("\t\t-----------------------\n");
     
     do {
+        printf("\n------------------------------------------------\n");
         printf("\nOptions:\n1. (I)nsert a record\n2. (S)earch for a record\n3. (D)elete a record\n4. (V)iew all records\n5. View (H)ash Table\n6. Quit\n\n");
         printf("Enter option: ");
         scanf(" %c", &option);
